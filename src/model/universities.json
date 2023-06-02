@@ -239,18 +239,6 @@
           "name": "Alabama"
         }
       }
-    },
-    {
-      "name": "Test Uni 21",
-      "id": 21,
-      "city": {
-        "name": "Paradise City",
-        "id": 21,
-        "state": {
-          "name": "Kentucky",
-          "id": 2
-        }
-      }
     }
   ]
 }

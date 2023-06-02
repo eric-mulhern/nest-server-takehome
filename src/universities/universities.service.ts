@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUniversityInput, State, University } from '../graphql.schema';
+import { CreateUniversityInput, University } from '../graphql.schema';
 import { universities } from '../model/universities.json';
 import { latestCityId } from '../model/latest-city-id.json';
 import { latestStateId } from '../model/latest-state-id.json';
@@ -10,13 +10,14 @@ import { join } from 'path';
 @Injectable()
 export class UniversitiesService {
   getUniversities(): University[] {
-    return universities;
+    if (universities.length) return universities;
+    else throw new Error('Could not find any universities');
   }
 
   getUniversityById(id: number): University | undefined {
-    return universities.find((uni) => uni.id === id);
-
-    // error catch if no match
+    const university = universities.find((uni) => uni.id === id);
+    if (university) return university;
+    else throw new Error(`Could not find University with ID ${id}`);
   }
 
   create(university: CreateUniversityInput): University {
