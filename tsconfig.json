@@ -24,6 +24,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "./generate-typings.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules", ".vscode"],
 }

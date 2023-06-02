@@ -1,19 +1,20 @@
 type Query {
-  universities: [University]
+  universities: [University!]!
   university(id: Int!): University
 }
 
 type Mutation {
-  createUniversity(createUniversityInput: CreateUniversityInput): University
+  createUniversity(createUniversityInput: CreateUniversityInput): University!
 }
+
+
 
 type State {
   id: Int!
   name: String!
 }
 
-type StateInput {
-  id: Int!
+input StateInput {
   name: String!
 }
 
@@ -23,10 +24,9 @@ type City {
   state: State!
 }
 
-type CityInput {
-  id: Int!
+input CityInput {
   name: String!
-  state: State!
+  state: StateInput!
 }
 
 type University {
@@ -35,10 +35,8 @@ type University {
   city: City!
 }
 
-""" make IDs into scalar? """
-
 input CreateUniversityInput {
-  id: Int! 
   name: String!
+  city: CityInput!
 }
 

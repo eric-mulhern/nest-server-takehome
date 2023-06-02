@@ -1,6 +1,6 @@
 import { UniversitiesService } from './universities.service';
-import { University } from '../graphql.schema';
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { CreateUniversityInput, University } from '../graphql.schema';
+import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
 import { ParseIntPipe } from '@nestjs/common';
 
 @Resolver('Universities')
@@ -18,5 +18,12 @@ export class UniversitiesResolver {
     id: number,
   ): University {
     return this.universitiesService.getUniversityById(id);
+  }
+
+  @Mutation('createUniversity')
+  create(
+    @Args('createUniversityInput') args: CreateUniversityInput,
+  ): University {
+    return this.universitiesService.create(args);
   }
 }

@@ -8,15 +8,24 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export class CreateUniversityInput {
-    id: number;
+export class StateInput {
     name: string;
+}
+
+export class CityInput {
+    name: string;
+    state: StateInput;
+}
+
+export class CreateUniversityInput {
+    name: string;
+    city: CityInput;
 }
 
 export abstract class IQuery {
     __typename?: 'IQuery';
 
-    abstract universities(): Nullable<Nullable<University>[]> | Promise<Nullable<Nullable<University>[]>>;
+    abstract universities(): University[] | Promise<University[]>;
 
     abstract university(id: number): Nullable<University> | Promise<Nullable<University>>;
 }
@@ -24,7 +33,7 @@ export abstract class IQuery {
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract createUniversity(createUniversityInput?: Nullable<CreateUniversityInput>): Nullable<University> | Promise<Nullable<University>>;
+    abstract createUniversity(createUniversityInput?: Nullable<CreateUniversityInput>): University | Promise<University>;
 }
 
 export class State {
@@ -33,21 +42,8 @@ export class State {
     name: string;
 }
 
-export class StateInput {
-    __typename?: 'StateInput';
-    id: number;
-    name: string;
-}
-
 export class City {
     __typename?: 'City';
-    id: number;
-    name: string;
-    state: State;
-}
-
-export class CityInput {
-    __typename?: 'CityInput';
     id: number;
     name: string;
     state: State;

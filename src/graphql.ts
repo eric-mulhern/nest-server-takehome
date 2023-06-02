@@ -8,18 +8,27 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export interface CreateUniversityInput {
-    id: number;
+export interface StateInput {
     name: string;
 }
 
+export interface CityInput {
+    name: string;
+    state: StateInput;
+}
+
+export interface CreateUniversityInput {
+    name: string;
+    city: CityInput;
+}
+
 export interface IQuery {
-    universities(): Nullable<Nullable<University>[]> | Promise<Nullable<Nullable<University>[]>>;
+    universities(): University[] | Promise<University[]>;
     university(id: number): Nullable<University> | Promise<Nullable<University>>;
 }
 
 export interface IMutation {
-    createUniversity(createUniversityInput?: Nullable<CreateUniversityInput>): Nullable<University> | Promise<Nullable<University>>;
+    createUniversity(createUniversityInput?: Nullable<CreateUniversityInput>): University | Promise<University>;
 }
 
 export interface State {
@@ -27,18 +36,7 @@ export interface State {
     name: string;
 }
 
-export interface StateInput {
-    id: number;
-    name: string;
-}
-
 export interface City {
-    id: number;
-    name: string;
-    state: State;
-}
-
-export interface CityInput {
     id: number;
     name: string;
     state: State;
