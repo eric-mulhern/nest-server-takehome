@@ -11,7 +11,7 @@ universities.forEach((university) => {
 
   if (!states[stateName]) {
     states[stateName] = {
-      stateId: university.city.state.id,
+      id: university.city.state.id,
       cities: {},
     };
   }

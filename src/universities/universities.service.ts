@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUniversityInput, University } from '../graphql.schema';
+import { CreateUniversityInput, University, UpdateUniversityInput } from '../graphql.schema';
 import { universities } from '../model/universities.json';
 import { latestCityId } from '../model/latest-city-id.json';
 import { latestStateId } from '../model/latest-state-id.json';
 import { states } from '../model/states.json';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
+import { updateStatesModel } from './helpers';
 
 @Injectable()
 export class UniversitiesService {
@@ -24,36 +25,7 @@ export class UniversitiesService {
     const cityName = university.city.name;
     const stateName = university.city.state.name;
 
-    // if the city doesn't exist in the states model
-    if (!states[stateName]?.cities[cityName]) {
-      // if the state doesn't exist in the states model,
-      if (!states[stateName]) {
-        // update states model to include new state
-        const newStateId = latestStateId + 1;
-        states[stateName] = {
-          id: newStateId,
-          cities: {},
-        };
-        // update latest state id
-        writeFileSync(
-          join(process.cwd(), 'src/model/latest-state-id.json'),
-          JSON.stringify({ latestStateId: newStateId }),
-        );
-      }
-      // update states model to include new city
-      const newCityId = latestCityId + 1;
-      states[stateName].cities[cityName] = newCityId;
-      // update latest city id
-      writeFileSync(
-        join(process.cwd(), 'src/model/latest-city-id.json'),
-        JSON.stringify({ latestCityId: newCityId }),
-      );
-      // save changes to states model
-      writeFileSync(
-        join(process.cwd(), 'src/model/states.json'),
-        JSON.stringify({ states }),
-      );
-    }
+    updateStatesModel(states, latestCityId, latestStateId, cityName, stateName);
 
     const newUniversity: University = {
       name: university.name,
@@ -69,10 +41,65 @@ export class UniversitiesService {
     };
     universities.push(newUniversity);
 
-    writeFileSync(
-      join(process.cwd(), 'src/model/universities.json'),
-      JSON.stringify({ universities }),
-    );
+    writeFileSync(join(process.cwd(), 'src/model/universities.json'), JSON.stringify({ universities }));
     return newUniversity;
+  }
+
+  update(university: UpdateUniversityInput): University {
+    const newCityName = university?.city?.name;
+    const newStateName = university?.city?.state?.name;
+
+    // find university with matching ID
+    let index: number;
+    const universityToUpdate: University = universities.find((uni, i) => {
+      if (uni.id === university.id) {
+        index = i;
+        return true;
+      }
+    });
+
+    if (universityToUpdate.id !== university.id) {
+      throw new Error(`Id ${university.id} does not match university name ${university.name}`);
+    }
+
+    // for each field in UpdateUniversityInput, if there is a value & that value is different, update value
+    universityToUpdate['name'] = university.name ?? universityToUpdate['name'];
+
+    // if there's a change to state
+    if (newStateName && universityToUpdate.city.state.name !== newStateName) {
+      universityToUpdate.city.state.name = newStateName;
+      if (states[newStateName]) {
+        // new state already exists and has an id
+        universityToUpdate.city.state.id = states[newStateName].id;
+      } else {
+        // new state doesn't exist: make a new one & create new city for this state
+        const { newStateId, newCityId } = updateStatesModel(
+          states,
+          latestCityId,
+          latestStateId,
+          newCityName,
+          newStateName,
+        );
+        universityToUpdate.city.state.id = newStateId;
+        universityToUpdate.city.id = newCityId;
+      }
+    } else {
+      // no change to state, but if there's a change to city,
+      if (newCityName && universityToUpdate.city.name !== newCityName) {
+        // if new city exists in current state, set new city name & id
+        if (states[universityToUpdate.city.state.name].cities[newCityName]) {
+          universityToUpdate.city.id = states[universityToUpdate.city.state.name].id;
+          universityToUpdate.city.name = states[universityToUpdate.city.state.name].name;
+        } else {
+          // else create new city
+          const { newCityId } = updateStatesModel(states, latestCityId, latestStateId, newCityName, newStateName);
+          universityToUpdate.city.id = newCityId;
+          universityToUpdate.city.name = newCityName;
+        }
+      }
+    }
+
+    writeFileSync(join(process.cwd(), 'src/model/universities.json'), JSON.stringify({ universities }));
+    return universityToUpdate;
   }
 }

@@ -22,6 +22,12 @@ export interface CreateUniversityInput {
     city: CityInput;
 }
 
+export interface UpdateUniversityInput {
+    id: number;
+    name?: Nullable<string>;
+    city?: Nullable<CityInput>;
+}
+
 export interface IQuery {
     universities(): University[] | Promise<University[]>;
     university(id: number): Nullable<University> | Promise<Nullable<University>>;
@@ -29,6 +35,7 @@ export interface IQuery {
 
 export interface IMutation {
     createUniversity(createUniversityInput?: Nullable<CreateUniversityInput>): University | Promise<University>;
+    updateUniversity(updateUniversityInput?: Nullable<UpdateUniversityInput>): University | Promise<University>;
 }
 
 export interface State {

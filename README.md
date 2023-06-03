@@ -102,11 +102,44 @@ mutation {
 }
 ```
 
+Updating a university
+```
+mutation {
+  updateUniversity(updateUniversityInput: {
+    id: 19,
+    name: "Gadsden State Community Collegio",
+    city: {
+      name: "Gadsdensensens",
+      state: {
+        name: "Massachusetts",
+      }
+    }
+  }) {
+    name
+    id
+    city {
+      name
+      id
+      state {
+        name
+        id
+      }
+    }
+  }
+}
+```
+
+## Notes on DX
+
+To provide a better developer experience, the create mutation does not require or accept ids as input. The code will instead derive the ids from the existing university, city, and state names – then automatically generate new ids as necessary. This has the added benefit of making sure that the client cannot break the consistency of the database by passing in incorrect combinations of name and id.
+
+Similarly, fields in the input of the `update` mutation are optional. To make an update, the developer needs only provide the relevant fields they wish to update, and can leave the unchanging fields blank.
+
 ## Notes on Database Structure
 
 I made some assumptions in structuring the database: 
 
-– Each University has a unique name and ID, and is stored with a reference to its corresponding city.
+– Each University has a unique ID, and is stored with a reference to its corresponding city.
 
 – City names are not necessarily unique – e.g. we can have Springfield, Missouri with id 1, and Springfield, Oregon with id 2.
 

@@ -1,5 +1,5 @@
 import { UniversitiesService } from './universities.service';
-import { CreateUniversityInput, University } from '../graphql.schema';
+import { CreateUniversityInput, University, UpdateUniversityInput } from '../graphql.schema';
 import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
 import { ParseIntPipe } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
@@ -27,9 +27,13 @@ export class UniversitiesResolver {
 
   @Roles(Role.Admin)
   @Mutation('createUniversity')
-  create(
-    @Args('createUniversityInput') args: CreateUniversityInput,
-  ): University {
+  create(@Args('createUniversityInput') args: CreateUniversityInput): University {
     return this.universitiesService.create(args);
+  }
+
+  @Roles(Role.Admin)
+  @Mutation('updateUniversity')
+  update(@Args('updateUniversityInput') args: UpdateUniversityInput): University {
+    return this.universitiesService.update(args);
   }
 }

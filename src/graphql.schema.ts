@@ -22,6 +22,12 @@ export class CreateUniversityInput {
     city: CityInput;
 }
 
+export class UpdateUniversityInput {
+    id: number;
+    name?: Nullable<string>;
+    city?: Nullable<CityInput>;
+}
+
 export abstract class IQuery {
     __typename?: 'IQuery';
 
@@ -34,6 +40,8 @@ export abstract class IMutation {
     __typename?: 'IMutation';
 
     abstract createUniversity(createUniversityInput?: Nullable<CreateUniversityInput>): University | Promise<University>;
+
+    abstract updateUniversity(updateUniversityInput?: Nullable<UpdateUniversityInput>): University | Promise<University>;
 }
 
 export class State {

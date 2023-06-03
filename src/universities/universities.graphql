@@ -5,6 +5,7 @@ type Query {
 
 type Mutation {
   createUniversity(createUniversityInput: CreateUniversityInput): University!
+  updateUniversity(updateUniversityInput: UpdateUniversityInput): University!
 }
 
 
@@ -38,5 +39,11 @@ type University {
 input CreateUniversityInput {
   name: String!
   city: CityInput!
+}
+
+input UpdateUniversityInput {
+  id: Int!
+  name: String
+  city: CityInput
 }
 

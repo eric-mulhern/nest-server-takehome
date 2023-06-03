@@ -218,13 +218,13 @@
     },
     {
       "id": 19,
-      "name": "Gadsden State Community College",
+      "name": "Gadsden State Community Collegio",
       "city": {
-        "id": 19,
-        "name": "Gadsden",
+        "name": "Gadsdensensens",
+        "id": 22,
         "state": {
-          "id": 1,
-          "name": "Alabama"
+          "id": 5,
+          "name": "Massachusetts"
         }
       }
     },
