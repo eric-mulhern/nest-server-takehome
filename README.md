@@ -129,6 +129,16 @@ mutation {
 }
 ```
 
+## Authentication & Authorization
+
+the `create` and `update` mutations are protected and can only be accessed with the appropriate header indicating that the user is an admin. I had begun to implement User-based authentication with Role-based authorization, but ran out of time so I patched together a simple auth guard in the `roles.guard.ts` file, which checks to ensure the request has the appropriate header before granting access to the protected endpoint. To access the endpoint, add the following header to your mutation:
+
+```
+{
+  "authorization": "suerspecialsecretsauce"
+}
+```
+
 ## Notes on DX
 
 To provide a better developer experience, the create mutation does not require or accept ids as input. The code will instead derive the ids from the existing university, city, and state names – then automatically generate new ids as necessary. This has the added benefit of making sure that the client cannot break the consistency of the database by passing in incorrect combinations of name and id.
