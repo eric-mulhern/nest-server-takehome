@@ -2,7 +2,7 @@ import { universities } from 'src/model/universities.json';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-// updates cities.json to reflect the complete list of cities found in universities.json
+// updates states.json to reflect the complete list of states found in universities.json
 const states = {};
 
 universities.forEach((university) => {

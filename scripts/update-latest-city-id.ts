@@ -2,7 +2,7 @@ import { universities } from 'src/model/universities.json';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-// updates latest-state-id.json to reflect the id of the most recently added state
+// updates latest-city-id.json to reflect the id of the most recently added city
 const latestCityId = universities.reduce((max, current) => {
   return Math.max(max, current.city.id);
 }, 1);

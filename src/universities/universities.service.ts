@@ -50,19 +50,14 @@ export class UniversitiesService {
     const newStateName = university?.city?.state?.name;
 
     // find university with matching ID
-    let index: number;
-    const universityToUpdate: University = universities.find((uni, i) => {
-      if (uni.id === university.id) {
-        index = i;
-        return true;
-      }
-    });
+    const universityToUpdate: University = universities.find((uni) => uni.id === university.id);
 
-    if (universityToUpdate.id !== university.id) {
-      throw new Error(`Id ${university.id} does not match university name ${university.name}`);
+    if (!universityToUpdate) {
+      throw new Error(`Could not find University with ID ${university.id}`);
     }
 
     // for each field in UpdateUniversityInput, if there is a value & that value is different, update value
+    
     universityToUpdate['name'] = university.name ?? universityToUpdate['name'];
 
     // if there's a change to state
@@ -86,15 +81,14 @@ export class UniversitiesService {
     } else {
       // no change to state, but if there's a change to city,
       if (newCityName && universityToUpdate.city.name !== newCityName) {
+        universityToUpdate.city.name = newCityName;
         // if new city exists in current state, set new city name & id
         if (states[universityToUpdate.city.state.name].cities[newCityName]) {
           universityToUpdate.city.id = states[universityToUpdate.city.state.name].id;
-          universityToUpdate.city.name = states[universityToUpdate.city.state.name].name;
         } else {
           // else create new city
           const { newCityId } = updateStatesModel(states, latestCityId, latestStateId, newCityName, newStateName);
           universityToUpdate.city.id = newCityId;
-          universityToUpdate.city.name = newCityName;
         }
       }
     }
